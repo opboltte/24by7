@@ -1,19 +1,9 @@
 import os
 import time
 from dotenv import load_dotenv
-from flask import Flask
 
 # Load environment variables from .env file
 load_dotenv()
-
-app = Flask(__name__)
-
-@app.route('/')
-def hello():
-    return "Hello, World!"
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)  # Change to your desired port
 
 # Get the environment variables
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
@@ -31,7 +21,7 @@ def main():
         # This is where you would implement your functionality
         print("Performing task...")
         # Sleep for a certain period (e.g., every 60 seconds)
-        time.sleep(60)
+        time.sleep(30)
 
 if __name__ == "__main__":
     main()
