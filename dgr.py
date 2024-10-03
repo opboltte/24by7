@@ -13,7 +13,7 @@ GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 CODESPACE_NAME = os.getenv('CODESPACE_NAME')
 OWNER_NAME = os.getenv('OWNER_NAME')
 REPO_NAME = os.getenv('REPO_NAME')
-PORT = os.getenv('PORT', 5000)  # Use the PORT environment variable
+PORT = 5000  # Hardcoded port number
 
 app = Flask(__name__)
 
@@ -30,11 +30,25 @@ def ping_codespace():
             response.raise_for_status()  # Raise an error for bad responses
             status = response.json().get("state", "Unknown")
             print(f"Codespace status: {status}")
+
+            if status == "Shutdown":
+                print(f"Codespace {CODESPACE_NAME} is shut down. Attempting to restart...")
+                start_codespace(headers)
+
         except requests.RequestException as e:
             print(f"Error pinging Codespace: {e}")
 
         # Wait for 60 seconds before the next ping
         time.sleep(60)
+
+def start_codespace(headers):
+    try:
+        # Send a request to start the Codespace
+        response = requests.post(f"https://api.github.com/user/codespaces/{CODESPACE_NAME}/start", headers=headers)
+        response.raise_for_status()
+        print(f"Codespace {CODESPACE_NAME} is starting...")
+    except requests.RequestException as e:
+        print(f"Error starting Codespace: {e}")
 
 if __name__ == "__main__":
     # Start the pinging thread
@@ -43,4 +57,4 @@ if __name__ == "__main__":
     ping_thread.start()
 
     # Start the Flask app
-    app.run(host='0.0.0.0', port=int(PORT))
+    app.run(host='0.0.0.0', port=PORT)  # Using the hardcoded port
