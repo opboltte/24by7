@@ -39,7 +39,7 @@ def ping_codespace():
             print(f"Error pinging Codespace: {e}")
 
         # Wait for 60 seconds before the next ping
-        time.sleep(60)
+        time.sleep(180)
 
 def start_codespace(headers):
     try:
